@@ -24,6 +24,26 @@ export const GET = async () => {
   };
 
 export const POST = async (request: Request) => {
+
+  const origin = request.headers.get("origin");
+  const allowedOrigins = ["http://localhost:3000", "https://aditya-karmakar.vercel.app/"];
+
+  const frontendApiKey = request.headers.get("x-api-key");
+  const validApiKey = process.env.NEXT_PUBLIC_FRONTEND_API_KEY;
+
+  if (!origin || !allowedOrigins.includes(origin)) {
+    console.error(`Unauthorized access attempt from origin: ${origin}`);
+    return new Response(JSON.stringify({ message: "Hey you! This API is not for the faint-hearted. Access denied! 🚫😂" }), {
+      status: 403,
+    });
+  }
+
+  if (frontendApiKey !== validApiKey) {
+    return new Response(JSON.stringify({ message: "Oops! That's not the magical key! 🔑✨ Access denied! 🚫😂" }), {
+      status: 403,
+    });
+  }
+
     try {
       await connectToDB();
       console.log("Database connected");

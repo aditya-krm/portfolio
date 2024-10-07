@@ -9,7 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 // Dynamically import the Markdown editor to avoid SSR issues
-const MDEditor = dynamic(() => import("@uiw/react-md-editor").then((mod) => mod.default), { ssr: false });
+const MDEditor = dynamic(
+  () => import("@uiw/react-md-editor").then((mod) => mod.default),
+  { ssr: false }
+);
 
 export default function CreateBlogPage() {
   const router = useRouter();
@@ -23,7 +26,9 @@ export default function CreateBlogPage() {
   });
 
   // Handle changes and auto-generate slug for title input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
     // Auto-generate slug when title changes
@@ -37,7 +42,10 @@ export default function CreateBlogPage() {
 
   // Function to generate slug from title
   const handleSlugGeneration = (title: string) => {
-    return title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
+    return title
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "");
   };
 
   const handleContentChange = (value: string | undefined) => {
@@ -62,6 +70,7 @@ export default function CreateBlogPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_FRONTEND_API_KEY || "",
         },
         body: JSON.stringify({
           title: formData.title,
@@ -90,7 +99,10 @@ export default function CreateBlogPage() {
       <h1 className="text-3xl font-bold mb-6">Create New Blog Post</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Title
           </label>
           <Input
@@ -103,7 +115,10 @@ export default function CreateBlogPage() {
           />
         </div>
         <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="slug"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Slug
           </label>
           <Input
@@ -119,7 +134,10 @@ export default function CreateBlogPage() {
           </p>
         </div>
         <div>
-          <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="excerpt"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Excerpt
           </label>
           <Textarea
@@ -132,13 +150,24 @@ export default function CreateBlogPage() {
           />
         </div>
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="content"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Content
           </label>
-          <MDEditor value={formData.content} onChange={handleContentChange} preview="live" height={400} />
+          <MDEditor
+            value={formData.content}
+            onChange={handleContentChange}
+            preview="live"
+            height={400}
+          />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Password
           </label>
           <Input
