@@ -89,7 +89,7 @@ export default function Blogs() {
                   <p className="text-gray-300 mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-400">
-                      {new Date(post.createdAt).toLocaleDateString()}
+                      {new Date(post.createdAt).toLocaleDateString("en-GB")}
                     </span>
                     <Button
                       variant="outline"

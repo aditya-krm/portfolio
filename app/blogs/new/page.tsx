@@ -52,15 +52,18 @@ export default function CreateBlogPage() {
     setFormData((prev) => ({ ...prev, content: value || "" }));
   };
 
-  const correctPassword = process.env.NEXT_PUBLIC_BLOG_PASSWORD || "";
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Validate password
-    if (formData.password !== correctPassword) {
-      toast.error("Incorrect password. Please try again.");
+    if (
+      !formData.title ||
+      !formData.slug ||
+      !formData.excerpt ||
+      !formData.content ||
+      !formData.password
+    ) {
+      toast.error("Please fill in all fields");
       setIsSubmitting(false);
       return;
     }
@@ -70,13 +73,13 @@ export default function CreateBlogPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.NEXT_PUBLIC_FRONTEND_API_KEY || "",
         },
         body: JSON.stringify({
           title: formData.title,
           slug: formData.slug,
           excerpt: formData.excerpt,
           content: formData.content,
+          password: formData.password,
         }),
       });
 

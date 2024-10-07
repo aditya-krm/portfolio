@@ -134,7 +134,7 @@ export default function BlogPost() {
             <div className="flex items-center text-gray-400 text-sm mb-6 space-x-4">
               <span className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
-                {new Date(blog.createdAt).toLocaleDateString()}
+                {new Date(blog.createdAt).toLocaleDateString("en-GB")}
               </span>
               <span className="flex items-center">
                 <User className="w-4 h-4 mr-1" />

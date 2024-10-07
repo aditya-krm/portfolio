@@ -24,36 +24,31 @@ export const GET = async () => {
   };
 
 export const POST = async (request: Request) => {
-
-  const origin = request.headers.get("origin");
-  const allowedOrigins = ["http://localhost:3000", "https://aditya-karmakar.vercel.app/"];
-
-  const frontendApiKey = request.headers.get("x-api-key");
-  const validApiKey = process.env.NEXT_PUBLIC_FRONTEND_API_KEY;
-
-  if (!origin || !allowedOrigins.includes(origin)) {
-    console.error(`Unauthorized access attempt from origin: ${origin}`);
-    return new Response(JSON.stringify({ message: "Hey you! This API is not for the faint-hearted. Access denied! 🚫😂" }), {
-      status: 403,
-    });
-  }
-
-  if (frontendApiKey !== validApiKey) {
-    return new Response(JSON.stringify({ message: "Oops! That's not the magical key! 🔑✨ Access denied! 🚫😂" }), {
-      status: 403,
-    });
-  }
-
     try {
-      await connectToDB();
-      console.log("Database connected");
-  
       const data = await request.json();
-      console.log("Received data:", data);
+      
   
-      if (!data.title || !data.slug || !data.excerpt || !data.content) {
-        console.log("Missing fields:", { title: data.title, slug: data.slug, excerpt: data.excerpt, content: data.content });
+      if (!data.title || !data.slug || !data.excerpt || !data.content || !data.password) {
         return new Response(JSON.stringify({ message: "Missing required fields" }), {
+          status: 400,
+        });
+      }
+
+      const correctPassword = process.env.BLOG_PASSWORD;
+      if (data.password !== correctPassword) {
+        return new Response(JSON.stringify({ message: "Incorrect password" }), {
+          status: 401,
+        });
+      }
+
+      await connectToDB();
+
+      const existingBlog = await Blog.findOne({
+        slug: data.slug,
+      }).exec();
+
+      if (existingBlog) {
+        return new Response(JSON.stringify({ message: "Blog with this slug already exists" }), {
           status: 400,
         });
       }
