@@ -2,6 +2,7 @@ import Navbar from "@/components/customs/Nav";
 import "./globals.css";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Aditya Karmakar - Full Stack Developer & Software Engineer Portfolio",
@@ -39,6 +40,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
           <Toaster position="top-right" richColors />
           <Navbar />
           {children}
+          <Analytics />
         </main>
       </body>
     </html>
