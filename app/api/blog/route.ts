@@ -24,6 +24,7 @@ export const GET = async () => {
 };
 
 export const POST = async (request: Request) => {
+  const webhookUrl = process.env.DISCORD_WEBHOOK || "";
   try {
     const data = await request.json();
 
@@ -68,7 +69,11 @@ export const POST = async (request: Request) => {
     await blog.save();
 
     const blogUrl = `https://aditya-karmakar.vercel.app/blogs/${data.slug}`;
-    await sendBlogToDiscord(data.title, blogUrl);
+    if (webhookUrl) {
+      await sendBlogToDiscord(data.title, blogUrl, webhookUrl);
+    } else {
+      console.error("Discord webhook URL is not defined");
+    }
     return new Response(JSON.stringify(blog), {
       status: 201,
     });
@@ -84,8 +89,11 @@ export const POST = async (request: Request) => {
 };
 
 // function for webhook of discord
-async function sendBlogToDiscord(blogTitle: string, blogUrl: string) {
-  const webhookUrl = process.env.DISCORD_WEBHOOK;
+async function sendBlogToDiscord(
+  blogTitle: string,
+  blogUrl: string,
+  webhookUrl: string
+) {
   const data = {
     content: "@everyone New blog uploaded!",
     embeds: [
